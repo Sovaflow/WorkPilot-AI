@@ -1,0 +1,23 @@
+[
+  {
+    "id": "mail-demo-01",
+    "subject": "Project review invitation",
+    "sender": "team@example.org",
+    "received_at": "2026-11-23T09:15:00+01:00",
+    "snippet": "[MEETING] Project review | 2026-11-24T14:00:00+01:00 | 2026-11-24T14:45:00+01:00"
+  },
+  {
+    "id": "mail-demo-02",
+    "subject": "Weekly reporting reminder",
+    "sender": "manager@example.org",
+    "received_at": "2026-11-23T09:30:00+01:00",
+    "snippet": "Please prepare the weekly metrics report by Friday."
+  },
+  {
+    "id": "mail-demo-03",
+    "subject": "Duplicate invitation",
+    "sender": "team@example.org",
+    "received_at": "2026-11-23T10:00:00+01:00",
+    "snippet": "[MEETING] Daily standup | 2026-11-24T09:00:00+01:00 | 2026-11-24T09:15:00+01:00"
+  }
+]

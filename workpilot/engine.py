@@ -103,12 +103,14 @@ def prepare_weekly(day, calendar, tasks, rules):
     completed = [t for t in week if t["status"] == "done"]
     open_tasks = [t for t in week if t["status"] != "done"]
     next_week = [t for t in merged if next_monday.isoformat() <= t["due_date"] <= next_sunday.isoformat()]
+    carryover = [t for t in merged if t["due_date"] <= sunday.isoformat() and t["status"] != "done"]
     next_events = [e for e in calendar
                    if next_monday <= datetime.fromisoformat(e["starts_at"]).date() <= next_sunday]
     return {
         "week_start": monday.isoformat(), "week_end": sunday.isoformat(),
         "completed": completed, "open": open_tasks,
         "next_week_tasks": sorted(next_week, key=lambda t: t["due_date"]),
+        "carryover_tasks": sorted(carryover, key=lambda t: t["due_date"]),
         "next_week_meetings": sorted(next_events, key=lambda e: e["starts_at"]),
         "status_counts": dict(Counter(t["status"] for t in week)),
     }
@@ -139,6 +141,8 @@ def render_weekly(report):
     lines += [f'- {t["title"]}' for t in report["completed"]] or ["- No explicitly completed tasks"]
     lines += ["", "## Outstanding"]
     lines += [f'- {t["due_date"]}: {t["title"]}' for t in report["open"]] or ["- None"]
+    lines += ["", "## Carry over into next week"]
+    lines += [f'- {t["due_date"]}: {t["title"]}' for t in report["carryover_tasks"]] or ["- No outstanding carryover"]
     lines += ["", "## Next week"]
     lines += [f'- {t["due_date"]}: {t["title"]} — {t.get("preparation", "")}' for t in report["next_week_tasks"]] or ["- None scheduled"]
     lines += ["", "## Upcoming meetings"]

@@ -1,4 +1,4 @@
-# WorkPilot AI — Intelligent Workday Assistant
+# WorkPilot AI - Intelligent Workday Assistant
 
 **Portfolio project | Python · AI Agent · Gmail API · Google Calendar API · Workflow Automation**
 

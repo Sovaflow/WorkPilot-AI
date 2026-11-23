@@ -1,0 +1,29 @@
+[
+  {
+    "id": "prep-slide-deck",
+    "title": "Prepare KPI slide deck",
+    "due_date": "2026-11-24",
+    "status": "open",
+    "preparation": "Check revenue and engagement charts",
+    "source": "manual",
+    "completed_at": ""
+  },
+  {
+    "id": "cleanup-notes",
+    "title": "Clean up meeting notes",
+    "due_date": "2026-11-23",
+    "status": "done",
+    "preparation": "",
+    "source": "manual",
+    "completed_at": "2026-11-23T16:00:00+01:00"
+  },
+  {
+    "id": "old-followup",
+    "title": "Follow up on open analytics question",
+    "due_date": "2026-11-20",
+    "status": "open",
+    "preparation": "Send a short status request",
+    "source": "manual",
+    "completed_at": ""
+  }
+]

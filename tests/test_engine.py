@@ -38,6 +38,20 @@ class EngineTests(unittest.TestCase):
         self.assertTrue(any(t["id"] == "late" for t in plan["overdue_tasks"]))
         self.assertIn("Standup", render_morning(plan))
 
+    def test_unseen_recurring_history_not_falsely_overdue(self):
+        report = prepare_morning(date(2026, 11, 24), [], [self.event], [], self.rule)
+        self.assertEqual(report["overdue_tasks"], [])
+        self.assertEqual(len(report["tasks_due"]), 1)
+
+    def test_ai_proposals_are_review_only(self):
+        suggestion = [{"proposal_id": "task:m1:1", "source_email_id": "m1",
+                       "title": "Check KPI report", "due_date": "2026-11-27",
+                       "status": "pending_review"}]
+        report = prepare_morning(date(2026, 11, 24), [], [], [], [], suggestion)
+        self.assertEqual(report["task_proposals"], suggestion)
+        self.assertEqual(report["tasks_due"], [])
+        self.assertIn("Check KPI report", render_morning(report))
+
     def test_weekly_requires_explicit_done(self):
         tasks = [{"id": "done", "title": "Completed", "due_date": "2026-11-24", "status": "done"},
                  {"id": "open", "title": "Unfinished", "due_date": "2026-11-25", "status": "open"}]

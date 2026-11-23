@@ -1,0 +1,4 @@
+# Only needed for optional live integrations
+Google-API-Python-Client>=2,<3
+google-auth-oauthlib>=1,<2
+openai>=2,<3

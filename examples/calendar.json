@@ -1,0 +1,16 @@
+[
+  {
+    "id": "event-demo-01",
+    "title": "Daily standup",
+    "starts_at": "2026-11-24T09:00:00+01:00",
+    "ends_at": "2026-11-24T09:15:00+01:00",
+    "description": "Prepare blockers and yesterday's progress"
+  },
+  {
+    "id": "event-demo-02",
+    "title": "Stakeholder sync",
+    "starts_at": "2026-11-24T11:30:00+01:00",
+    "ends_at": "2026-11-24T12:00:00+01:00",
+    "description": "Prepare customer KPI highlights"
+  }
+]

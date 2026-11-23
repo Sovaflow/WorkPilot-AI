@@ -28,7 +28,7 @@ Task status ────────┘                             └─> Meet
                                              optional Google Calendar write
 ```
 
-## Demo — no API keys or packages required
+## Offline demo — no API keys or packages required
 
 Python 3.10+:
 
@@ -40,7 +40,7 @@ python -m unittest discover -s tests -v
 
 Generated Markdown/JSON reports are saved in `outputs/` (gitignored).
 
-## Optional live integrations
+## Optional live integrations (not activated or tested against personal accounts)
 
 Install `pip install -r requirements.txt`, configure a Google Cloud **Desktop OAuth** client locally as `credentials.json` (never commit), then run:
 
@@ -60,7 +60,7 @@ See [scheduling and manual calendar approval](docs/scheduling.md) and [architect
 - `examples/` — entirely fabricated input data
 - `tests/` — offline unit tests
 - `docs/` — integration and scheduling guidance
-- `.github/workflows/` — automated tests
+- `tests/` — optional local unit tests using fictional example data (no automatic GitHub workflows)
 
 ## Design principles
 

@@ -1,0 +1,73 @@
+# WorkPilot AI — Intelligent Workday Assistant
+
+**Portfolio project | Python · AI Agent · Gmail API · Google Calendar API · Workflow Automation**
+
+An offline-first **working prototype** that combines email, calendar, task status and recurring obligations to produce a morning agenda, suggest meetings and prepare a weekly review. The architecture extends an earlier scheduled API → logging → notification workflow with task reconciliation and optional LLM summarization.
+
+> **Status:** synthetic offline demo and unit tests work. Real Google API, LLM and SMTP integrations are **opt-in adapters, not deployed or verified live**. Google Calendar insertion requires separate OAuth write permission and explicit human approval. No real personal data or credentials appear here.
+
+## Capabilities
+
+1. Collect message metadata and calendar entries from synthetic fixtures, or read-only Google APIs.
+2. Reconcile daily / weekly / monthly recurring obligations with task status.
+3. Identify structured demonstration invitations, check for duplicate calendar events, and prepare **approval-only** proposals.
+4. Generate daily briefings (meetings, preparation, overdue tasks, unresolved items).
+5. Generate weekly review (explicitly completed vs. still open; next-week plan).
+6. Optionally use an LLM for summarization or SMTP for delivery. These are *off by default*.
+
+## Architecture
+
+```text
+Gmail (optional) ─┐
+Calendar (optional) ─┤
+Recurring tasks ────┼─> WorkPilot reconciliation ──> Morning briefing / Weekly review
+Task status ────────┘                             └─> Meeting proposals
+                                                         |
+                                                explicit human approval
+                                                         |
+                                             optional Google Calendar write
+```
+
+## Demo — no API keys or packages required
+
+Python 3.10+:
+
+```bash
+python -m workpilot --mode morning --date 2026-11-24
+python -m workpilot --mode weekly --date 2026-11-27
+python -m unittest discover -s tests -v
+```
+
+Generated Markdown/JSON reports are saved in `outputs/` (gitignored).
+
+## Optional live integrations
+
+Install `pip install -r requirements.txt`, configure a Google Cloud **Desktop OAuth** client locally as `credentials.json` (never commit), then run:
+
+```bash
+python -m workpilot --mode morning --source google
+```
+
+The Google reader uses **Gmail read-only and Calendar read-only** scopes. The task registry remains the demonstration fixture unless you replace it privately. Email excerpts should be treated as untrusted data. The extraction example recognizes only explicitly structured `[MEETING]` demo invitations, **not arbitrary natural-language invitation emails**.
+
+With `OPENAI_API_KEY`, add `--llm` for a summary; the generated briefing is transmitted to OpenAI, so do not use private workplace content without an appropriate privacy review. To opt in to SMTP delivery, configure `WORKPILOT_SMTP_HOST`, `WORKPILOT_SMTP_USER`, `WORKPILOT_SMTP_PASSWORD`, `WORKPILOT_RECIPIENT` and pass `--send`.
+
+See [scheduling and manual calendar approval](docs/scheduling.md) and [architecture and safeguards](docs/architecture.md).
+
+## Repository
+
+- `workpilot/` — deterministic agent engine and optional integrations
+- `examples/` — entirely fabricated input data
+- `tests/` — offline unit tests
+- `docs/` — integration and scheduling guidance
+- `.github/workflows/` — automated tests
+
+## Design principles
+
+**Safe autonomy:** read-only by default; no autonomous email responses or calendar modifications. **Reliable status:** only explicitly completed tasks count as done. **Idempotency:** stable recurring task IDs and duplicate meeting checks. **Privacy:** secrets and personal reports are excluded from version control.
+
+### Next improvements
+
+Private persistent task storage, robust natural-language invitation extraction with human validation, stronger logging and retries, timezone policy and a compact dashboard. These are proposals, not completed features.
+
+*Portfolio reconstruction: independently built demonstration; not a deployed production assistant.*

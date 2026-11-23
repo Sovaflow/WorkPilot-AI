@@ -76,8 +76,10 @@ def extract_meeting_proposals(messages, calendar):
     return proposals
 
 
-def prepare_morning(day, messages, calendar, tasks, rules):
-    recurring = planned_recurring(rules, day - timedelta(days=30), day)
+def prepare_morning(day, messages, calendar, tasks, rules, task_proposals=None):
+    # Only instantiate today's obligations. Previously saved open tasks
+    # are the sole source of historical overdue recurring obligations.
+    recurring = planned_recurring(rules, day, day)
     merged = merge_tasks(tasks, recurring)
     today_tasks = sorted((t for t in merged if t["due_date"] == day.isoformat() and t["status"] != "done"),
                          key=lambda t: t.get("due_time", ""))
@@ -87,6 +89,7 @@ def prepare_morning(day, messages, calendar, tasks, rules):
                           key=lambda e: e["starts_at"])
     proposals = extract_meeting_proposals(messages, calendar)
     return {"date": day.isoformat(), "meetings": today_events, "tasks_due": today_tasks,
+            "task_proposals": task_proposals or [],
             "overdue_tasks": overdue, "meeting_proposals": proposals,
             "unread_email_context": [{"subject": x.get("subject", ""), "snippet": x.get("snippet", "")}
                                      for x in messages[:10]]}
@@ -128,6 +131,8 @@ def render_morning(plan):
     lines += [f'- {task["title"]} — {task.get("preparation", "")}' for task in plan["tasks_due"]] or ["- No tasks due"]
     lines += ["", "## Overdue / still open"]
     lines += [f'- {task["due_date"]}: {task["title"]}' for task in plan["overdue_tasks"]] or ["- No overdue tasks"]
+    lines += ["", "## AI-extracted task suggestions (human review required)"]
+    lines += [f'- {p["title"]} | Due: {p.get("due_date") or "confirm deadline"} | Source: {p["source_email_id"]}' for p in plan.get("task_proposals", [])] or ["- No task suggestions"]
     lines += ["", "## Proposed meetings (approval required)"]
     lines += [f'- {p["starts_at"]}: {p["title"]}' for p in plan["meeting_proposals"]] or ["- No new proposals"]
     lines += ["", "## Email context (untrusted, for review)"]

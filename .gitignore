@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.env
+.env.*
+credentials.json
+token.json
+calendar_write_token.json
+outputs/
+*.log
+.DS_Store

@@ -1,0 +1,37 @@
+[
+  {
+    "id": "daily-standup-prep",
+    "title": "Prepare daily standup",
+    "frequency": "weekly",
+    "weekdays": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "due_time": "08:45",
+    "preparation": "Review blockers and progress",
+    "day_of_month": 0
+  },
+  {
+    "id": "weekly-report",
+    "title": "Send weekly metrics report",
+    "frequency": "weekly",
+    "weekdays": [
+      4
+    ],
+    "due_time": "15:00",
+    "preparation": "Refresh KPI dashboard, verify numbers, attach report",
+    "day_of_month": 0
+  },
+  {
+    "id": "monthly-review",
+    "title": "Monthly performance review",
+    "frequency": "monthly",
+    "weekdays": [],
+    "due_time": "13:00",
+    "preparation": "Summarize KPIs and open decisions",
+    "day_of_month": 25
+  }
+]

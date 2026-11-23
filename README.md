@@ -28,6 +28,14 @@ Task status ────────┘                             └─> Meet
                                              optional Google Calendar write
 ```
 
+## What's new: persistent tasks and AI extraction
+
+- **SQLite task ledger:** completion status persists across runs, including recurring occurrences. Historical tasks only become overdue if they were actually recorded.
+- **AI task proposal workflow:** extract action items from ordinary email snippets into structured, source-linked proposals. New tasks remain **pending review**; nothing is silently added.
+- **Two extraction modes:** `--extract demo` reads a fabricated, prewritten extraction (no API); `--extract ai` explicitly calls OpenAI and requires an API key. This is not a trained custom model.
+- **Human confirmation:** only approved, dated suggestions enter the ledger. Meeting creation remains a separate manual operation.
+- **Daily and weekly planning:** unfinished tasks carry into future reviews without falsely labelling unseen recurring occurrences as missed.
+
 ## Offline demo — no API keys or packages required
 
 Python 3.10+:
@@ -35,17 +43,45 @@ Python 3.10+:
 ```bash
 python -m workpilot --mode morning --date 2026-11-24
 python -m workpilot --mode weekly --date 2026-11-27
+# Mark a recorded task as complete, then rerun the weekly report:
+python -m workpilot --complete weekly-report:2026-11-27
+python -m workpilot --mode weekly --date 2026-11-27
 python -m unittest discover -s tests -v
 ```
 
-Generated Markdown/JSON reports are saved in `outputs/` (gitignored).
+Generated Markdown/JSON reports and the SQLite database are saved in `outputs/` (gitignored). These files stay local.
+
+### Approving an extracted task
+
+Review `outputs/morning_2026-11-24_task_proposals.json`. Put the proposal IDs you genuinely approve into a **local**, untracked file:
+
+```json
+{"approved_proposal_ids": ["task:mail-demo-02:1"]}
+```
+
+Save it as `outputs/approvals.json`, then run:
+
+```bash
+python -m workpilot --mode morning --date 2026-11-24 --approve-file outputs/approvals.json
+```
+
+An extracted task without a reliable due date **cannot** be approved until a date is supplied. Meeting proposals follow a separate manual approval path.
+
+### Optional AI parsing with fabricated email data only
+
+```bash
+# Requires a locally configured OPENAI_API_KEY, and sends demo excerpts to OpenAI
+python -m workpilot --mode morning --date 2026-11-24 --extract ai
+```
+
+Never use real private email or workplace content without appropriate authorization. No AI calls are made by the default demo.
 
 ## Optional live integrations (not activated or tested against personal accounts)
 
 Install `pip install -r requirements.txt`, configure a Google Cloud **Desktop OAuth** client locally as `credentials.json` (never commit), then run:
 
 ```bash
-python -m workpilot --mode morning --source google
+python -m workpilot --mode morning --source google --extract off
 ```
 
 The Google reader uses **Gmail read-only and Calendar read-only** scopes. The task registry remains the demonstration fixture unless you replace it privately. Email excerpts should be treated as untrusted data. The extraction example recognizes only explicitly structured `[MEETING]` demo invitations, **not arbitrary natural-language invitation emails**.
@@ -68,6 +104,6 @@ See [scheduling and manual calendar approval](docs/scheduling.md) and [architect
 
 ### Next improvements
 
-Private persistent task storage, robust natural-language invitation extraction with human validation, stronger logging and retries, timezone policy and a compact dashboard. These are proposals, not completed features.
+Validated natural-language meeting extraction, stronger logging and retries, timezone policy, explicit task-history UI, and a compact dashboard. These are proposals, not completed features.
 
 *Portfolio reconstruction: independently built demonstration; not a deployed production assistant.*
